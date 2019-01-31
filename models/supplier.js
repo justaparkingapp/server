@@ -2,18 +2,22 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var SupplierSchema =  new Schema({
-    longitude: {type: Number, required: true},
-    latitude: {type: Number, required: true},
-    location: String,
+    Longitude: {type: Number, required: true},
+    Latitude: {type: Number, required: true},
+    Location: String,
     Date: {type: Date, default: Date.now},
-    parkingType: String,
-    price:{type: Number, required: true}
+    ParkingType: String,
+    Price:{type: Number, required: true},
+    _Creator:{
+        type:Schema.Types.ObjectId,
+        required: true,
+    }
 });
 
 
 var Supplier = mongoose.model('Supplier', SupplierSchema);
 
 
-module.exports = Supplier;
+module.exports = {Supplier};
 
 
