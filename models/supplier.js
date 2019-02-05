@@ -5,7 +5,9 @@ var SupplierSchema =  new Schema({
     Longitude: {type: Number, required: true},
     Latitude: {type: Number, required: true},
     Location: String,
-    Date: {type: Date, default: Date.now},
+    CreateDate: {type: Date, default: Date.now},
+    SupllyDate:{type:Date,required: true},
+    UserCurrentLocation: String,
     ParkingType: String,
     Price:{type: Number, required: true},
     _Creator:{

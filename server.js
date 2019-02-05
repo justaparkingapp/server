@@ -12,7 +12,9 @@ var express = require('express')
 
 app.use(bodyParser.json());
 
-app.use("/api", indexRoutes);
-app.use("/api/supply",SupplyRoutes);
+app.use('/api', indexRoutes);
+app.use('/api/demand', demandRoutes);
+app.use('/api/supply', SupplyRoutes);
+
 
 app.listen(port, () => console.log(`Parking app listening on port ${port}!`))

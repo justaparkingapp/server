@@ -1,10 +1,9 @@
 const mongoose = require('mongoose');
-const validator = require('validator');
-const jwt = require('jsonwebtoken');
-const _ = require('lodash');
-const bcrypt = require('bcryptjs')
-
-
+      validator = require('validator');
+      jwt = require('jsonwebtoken');
+      _ = require('lodash');
+      bcrypt = require('bcryptjs')
+      keys = require('./../config/keys');
 
 var Schema = mongoose.Schema;
 
@@ -24,17 +23,11 @@ var UserSchema = new Schema({
             required: true
         }
     }],
-    FirstName: {type: String, required: true, trim: true, minlength: 1},
-    LastName: {type: String, required: true, trim: true, minlength: 1},
-    PhoneNumber: {type: Number, required: true, trim: true, minlength: 1},
-    CarModel:{type: String, required: true, trim: true, minlength: 1},
-    SuppliesList: [{
-        type: Schema.Types.ObjectId
-    }],
-    DemandsList: [{
-        type: Schema.Types.ObjectId,
-        ref: 'Demander'
-    }]
+    FirstName: {type: String, trim: true, minlength: 1},
+    LastName: {type: String,  trim: true, minlength: 1},
+    PhoneNumber: {type: Number,  trim: true, minlength: 1},
+    CarModel:{type: String, trim: true, minlength: 1},
+    CreateDate:{type: Date, default: Date.now}
  });
 
  // simple example to pick exactly what the server send back to the user
@@ -49,7 +42,7 @@ var UserSchema = new Schema({
 UserSchema.methods.generateAuthToken = function () {
     var user = this;
     var access = 'auth';
-    var token = jwt.sign({_id: user._id.toHexString(), access}, process.env.JWT_SECRET || "123").toString();
+    var token = jwt.sign({_id: user._id.toHexString(), access}, keys.JWT_SECRET).toString();
 
 
    //if don't work try user.tokens.concat
@@ -78,7 +71,7 @@ UserSchema.statics.findByToken = function (token) {
     var decoded;
 
     try {
-        decoded = jwt.verify(token, process.env.JWT_SECRET || "123");
+        decoded = jwt.verify(token, keys.JWT_SECRET);
     } catch (e) {
         return Promise.reject();
     }
@@ -127,6 +120,8 @@ UserSchema.pre('save', function (next) {
         next();
     }
 });
+
+UserSchema.index({Email : 1});
 
 var User = mongoose.model('User', UserSchema);
 

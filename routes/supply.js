@@ -1,6 +1,6 @@
 var express = require("express");
 var router  = express.Router();
-var {User}  = require('./../models/user');
+const {ObjectID} = require('mongodb');
 var {authenticate} = require('./../middleware/authenticate');
 var {Supplier} = require('./../models/supplier');
 
@@ -12,17 +12,12 @@ router.post('/',authenticate, async (req, res) => {
             Latitude:req.body.Latitude,
             Location: req.body.Location,
             ParkingType:req.body.ParkingType,
+            SupllyDate:req.body.SupllyDate,
             Price:req.body.Price,
-            _Creator: req.user._id
+            _Creator: req.user._id,
+            UserCurrentLocation:req.body.UserCurrentLocation
         });
         const doc = await newSupplier.save();
-
-        var supplyId=doc._doc._id;
-
-
-        var suplly = await  Supplier.findOneAndUpdate({_Creator: req.user._id}, {$set: { SuppliesList: supplyId }});
-
-        req.user._doc.SuppliesList.push(supplyId)
         res.send({doc});
     }catch(err){
         res.status(400).send(err);
@@ -56,7 +51,7 @@ router.get('/:id',authenticate, async (req, res) => {
 
 router.patch('/:id', authenticate, (req, res) => {
     var id = req.params.id;
-    var body = _.pick(req.body, ['text', 'completed']);
+    var body = _.pick(req.body, ['Longitude', 'Latitude','ParkingType','Price','SupllyDate','Location']);
 
     if (!ObjectID.isValid(id)) {
         return res.status(404).send();
